@@ -508,6 +508,10 @@ struct wpa_ssid {
 	 */
 	int *mesh_basic_rates;
 
+	// Enhancement: mesh_supported_rates - BSS Supported rate set for mesh network
+	int *mesh_supported_rates;
+
+
 	/**
 	 * Mesh network plink parameters
 	 */

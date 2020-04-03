@@ -1982,6 +1982,30 @@ static int wpa_config_parse_mesh_basic_rates(const struct parse_data *data,
 	return 0;
 }
 
+static int wpa_config_parse_mesh_supported_rates(const struct parse_data *data,
+					     struct wpa_ssid *ssid, int line,
+					     const char *value)
+{
+	puts("wpa_config_parse_mesh_supported_rates");
+
+	int *rates = wpa_config_parse_int_array(value);
+
+	if (rates == NULL) {
+		wpa_printf(MSG_ERROR, "Line %d: Invalid mesh_supported_rates '%s'",
+			   line, value);
+		return -1;
+	}
+	if (rates[0] == 0) {
+		os_free(rates);
+		rates = NULL;
+	}
+
+	os_free(ssid->mesh_supported_rates);
+	ssid->mesh_supported_rates = rates;
+
+	return 0;
+}
+
 
 #ifndef NO_CONFIG_WRITE
 
@@ -1989,6 +2013,12 @@ static char * wpa_config_write_mesh_basic_rates(const struct parse_data *data,
 						struct wpa_ssid *ssid)
 {
 	return wpa_config_write_freqs(data, ssid->mesh_basic_rates);
+}
+
+static char * wpa_config_write_mesh_supported_rates(const struct parse_data *data,
+						struct wpa_ssid *ssid)
+{
+	return wpa_config_write_freqs(data, ssid->mesh_supported_rates);
 }
 
 #endif /* NO_CONFIG_WRITE */
@@ -2329,6 +2359,7 @@ static const struct parse_data ssid_fields[] = {
 #endif /* CONFIG_ACS */
 #ifdef CONFIG_MESH
 	{ FUNC(mesh_basic_rates) },
+	{ FUNC(mesh_supported_rates) },
 	{ INT(dot11MeshMaxRetries) },
 	{ INT(dot11MeshRetryTimeout) },
 	{ INT(dot11MeshConfirmTimeout) },

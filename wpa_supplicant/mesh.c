@@ -382,6 +382,22 @@ static int wpa_supplicant_mesh_init(struct wpa_supplicant *wpa_s,
 		conf->basic_rates[rate_len] = -1;
 	}
 
+	if (ssid->mesh_supported_rates) {
+		puts("mesh_supported_rates");
+		int rate_len = 0;
+		while (1) {
+			if (ssid->mesh_supported_rates[rate_len] < 1)
+				break;
+			rate_len++;
+		}
+		conf->supported_rates = os_calloc(rate_len + 1, sizeof(int));
+		if (conf->supported_rates == NULL)
+			goto out_free;
+		os_memcpy(conf->supported_rates, ssid->mesh_supported_rates,
+			  rate_len * sizeof(int));
+		conf->supported_rates[rate_len] = -1;
+	}
+
 	if (wpa_drv_init_mesh(wpa_s)) {
 		wpa_msg(wpa_s, MSG_ERROR, "Failed to init mesh in driver");
 		return -1;

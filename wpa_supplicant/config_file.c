@@ -876,6 +876,7 @@ static void wpa_config_write_network(FILE *f, struct wpa_ssid *ssid)
 	write_int(f, "mac_addr", ssid->mac_addr, -1);
 #ifdef CONFIG_MESH
 	STR(mesh_basic_rates);
+	STR(mesh_supported_rates);
 	INT_DEF(dot11MeshMaxRetries, DEFAULT_MESH_MAX_RETRIES);
 	INT_DEF(dot11MeshRetryTimeout, DEFAULT_MESH_RETRY_TIMEOUT);
 	INT_DEF(dot11MeshConfirmTimeout, DEFAULT_MESH_CONFIRM_TIMEOUT);
